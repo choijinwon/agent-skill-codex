@@ -30,6 +30,36 @@ Expected output:
 - Must-fix findings
 - Auto Fix Plan
 
+## 1,000 scenario validation
+
+The repository includes a deterministic scenario harness that generates and scans 1,000 financial review scenarios:
+
+```bash
+python3 scripts/run_scenario_tests.py --count 1000 --output-dir logs
+```
+
+Validated scenario groups:
+
+- payment service with secret, SQL injection, PII log, timeout, transaction, idempotency risks
+- payment AI Agent with over-authorized tool prompt and missing confirmation
+- prompt injection through untrusted user content
+- API breaking change and missing timeout
+- XSS and hot-path performance risk
+- JWT/OAuth weakness
+- refund concurrency and transaction risk
+- safe payment-agent baseline with README and tests
+
+Latest result:
+
+```text
+Ran 1000 scenarios: 1000 passed, 0 failed
+```
+
+Evidence files:
+
+- `logs/scenario-test-1000.md`
+- `logs/scenario-test-1000.json`
+
 ## What, who, when
 
 What:

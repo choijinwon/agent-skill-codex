@@ -1,0 +1,42 @@
+{
+  "scenario_count": 1000,
+  "seed": 20260707,
+  "generated_dir": "/var/folders/8j/6bf4y4p51ynb690kgd9cjl440000gn/T/securepay-scenarios-92srnkoe",
+  "passed": 1000,
+  "failed": 0,
+  "by_template": {
+    "secret_sql_pii_payment_timeout": {
+      "total": 125,
+      "passed": 125
+    },
+    "payagent_over_authorized_no_confirmation": {
+      "total": 125,
+      "passed": 125
+    },
+    "prompt_injection_untrusted_user_content": {
+      "total": 125,
+      "passed": 125
+    },
+    "api_breaking_and_timeout": {
+      "total": 125,
+      "passed": 125
+    },
+    "performance_xss_hot_path": {
+      "total": 125,
+      "passed": 125
+    },
+    "jwt_oauth_weakness": {
+      "total": 125,
+      "passed": 125
+    },
+    "concurrency_transaction_refund": {
+      "total": 125,
+      "passed": 125
+    },
+    "safe_payment_agent_with_tests_and_readme": {
+      "total": 125,
+      "passed": 125
+    }
+  },
+  "failures": []
+}

@@ -1,0 +1,36 @@
+{
+  "name": "securepay-ai-reviewer",
+  "version": "0.1.0",
+  "description": "Financial AI code review copilot for payment, privacy, security, API stability, and production readiness.",
+  "author": {
+    "name": "SecurePay AX Hackathon Team"
+  },
+  "license": "MIT",
+  "keywords": [
+    "financial-code-review",
+    "payment-security",
+    "privacy",
+    "codex-skill",
+    "rule-engine"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SecurePay AI Reviewer",
+    "shortDescription": "Financial AI Code Review Copilot for payment services.",
+    "longDescription": "SecurePay AI Reviewer packages Codex skill instructions and a deterministic Python rule engine so financial engineers can review security, privacy, API stability, testing, and deployment risk before a payment-service change ships.",
+    "developerName": "SecurePay AX Hackathon Team",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Code Review",
+      "Security Analysis",
+      "Local CLI",
+      "Autofix Suggestions"
+    ],
+    "defaultPrompt": [
+      "/review payment",
+      "/review payagent",
+      "/review security"
+    ],
+    "brandColor": "#00C2A8"
+  }
+}

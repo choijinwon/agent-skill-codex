@@ -1,0 +1,122 @@
+{
+  "target": "/Users/choijinwon/Documents/Codex/2026-07-07-role-openai-codex-plugin-architect-google/plugins/securepay-ai-reviewer/samples/payment-service",
+  "profile": "security",
+  "scores": {
+    "risk_score": 0,
+    "security_score": 7,
+    "quality_score": 86,
+    "deployment_score": 100,
+    "trust_score": 50,
+    "finding_count": 6,
+    "critical_count": 3,
+    "high_count": 1,
+    "medium_count": 1,
+    "low_count": 1
+  },
+  "findings": [
+    {
+      "rule_id": "SECRET-001",
+      "category": "secret",
+      "severity": "critical",
+      "title": "Hard-coded secret or token",
+      "file": "payment_service.py",
+      "line": 3,
+      "evidence": "PAYMENT_API_KEY = \"sk_live_kakaopay_demo_secret\"",
+      "rationale": "Leaked credentials in source code can directly compromise payment and user data systems.",
+      "recommendation": "Move secrets to a vault or environment variable and rotate the exposed value.",
+      "fix_example": "PAYMENT_API_KEY = os.environ['PAYMENT_API_KEY']"
+    },
+    {
+      "rule_id": "SECRET-001",
+      "category": "secret",
+      "severity": "critical",
+      "title": "Hard-coded secret or token",
+      "file": "payment_service.py",
+      "line": 8,
+      "evidence": "token = \"header.payload.signature\"",
+      "rationale": "Leaked credentials in source code can directly compromise payment and user data systems.",
+      "recommendation": "Move secrets to a vault or environment variable and rotate the exposed value.",
+      "fix_example": "PAYMENT_API_KEY = os.environ['PAYMENT_API_KEY']"
+    },
+    {
+      "rule_id": "INJECT-001",
+      "category": "injection",
+      "severity": "critical",
+      "title": "Potential SQL injection",
+      "file": "payment_service.py",
+      "line": 16,
+      "evidence": "return cursor.execute(f\"select * from payments where user_id = '{user_id}'\")",
+      "rationale": "Payment and settlement queries must not concatenate user-controlled input.",
+      "recommendation": "Use parameterized SQL or repository helpers that bind values.",
+      "fix_example": "cursor.execute('select * from payments where user_id = ?', (user_id,))"
+    },
+    {
+      "rule_id": "PRIVACY-001",
+      "category": "privacy",
+      "severity": "high",
+      "title": "Sensitive personal or payment data in logs",
+      "file": "payment_service.py",
+      "line": 7,
+      "evidence": "print(f\"approve payment user={user_id} card={card_no}\")",
+      "rationale": "Logs are copied to observability and incident systems; raw PII creates privacy and compliance risk.",
+      "recommendation": "Mask or hash sensitive fields before logging and define retention rules.",
+      "fix_example": "logger.info('payment approved user=%s card=%s', user_id, mask_card(card_no))"
+    },
+    {
+      "rule_id": "TEST-001",
+      "category": "test",
+      "severity": "medium",
+      "title": "No automated tests detected",
+      "file": ".",
+      "line": 1,
+      "evidence": "source files exist but no test files were found",
+      "rationale": "Payment changes need executable evidence for rollback-safe releases.",
+      "recommendation": "Add focused unit tests and at least one integration test around payment success, failure, duplicate request, and timeout cases.",
+      "fix_example": "tests/test_payment_service.py with duplicate payment and timeout scenarios"
+    },
+    {
+      "rule_id": "DOC-001",
+      "category": "readme",
+      "severity": "low",
+      "title": "README is missing",
+      "file": ".",
+      "line": 1,
+      "evidence": "2 files scanned",
+      "rationale": "Financial services need operational context, ownership, and runbook links during incidents.",
+      "recommendation": "Add README sections for owner, APIs, dependencies, SLO, rollback, and FDS/security notes.",
+      "fix_example": "README.md: owner, endpoints, alert channels, rollback command, known risk controls"
+    }
+  ],
+  "fix_plan": [
+    {
+      "file": "payment_service.py",
+      "rule_id": "SECRET-001",
+      "change": "Move secrets to a vault or environment variable and rotate the exposed value.",
+      "suggested_code": "PAYMENT_API_KEY = os.environ['PAYMENT_API_KEY']"
+    },
+    {
+      "file": "payment_service.py",
+      "rule_id": "INJECT-001",
+      "change": "Use parameterized SQL or repository helpers that bind values.",
+      "suggested_code": "cursor.execute('select * from payments where user_id = ?', (user_id,))"
+    },
+    {
+      "file": "payment_service.py",
+      "rule_id": "PRIVACY-001",
+      "change": "Mask or hash sensitive fields before logging and define retention rules.",
+      "suggested_code": "logger.info('payment approved user=%s card=%s', user_id, mask_card(card_no))"
+    },
+    {
+      "file": ".",
+      "rule_id": "TEST-001",
+      "change": "Add focused unit tests and at least one integration test around payment success, failure, duplicate request, and timeout cases.",
+      "suggested_code": "tests/test_payment_service.py with duplicate payment and timeout scenarios"
+    },
+    {
+      "file": ".",
+      "rule_id": "DOC-001",
+      "change": "Add README sections for owner, APIs, dependencies, SLO, rollback, and FDS/security notes.",
+      "suggested_code": "README.md: owner, endpoints, alert channels, rollback command, known risk controls"
+    }
+  ]
+}

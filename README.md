@@ -27,6 +27,7 @@ Expected output:
 - Quality Score
 - Deployment Score
 - Trust Score
+- Markdown tables for findings and auto-fix plan
 - Must-fix findings
 - Auto Fix Plan
 

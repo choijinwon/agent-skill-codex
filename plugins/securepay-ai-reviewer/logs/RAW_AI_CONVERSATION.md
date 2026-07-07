@@ -1576,3 +1576,59 @@ Assistant:
 Assistant:
 
 리포트와 JSON은 이제 상대경로로 나옵니다. `run_scenario_tests.py` 안의 `securepay-scenarios-`는 임시 디렉터리 prefix 문자열이라 사용자 경로가 아니며, 출력 로그에는 `<temporary-generated-scenarios>`로 표시됩니다. 이제 zip과 원격 main까지 동기화합니다.
+
+Assistant:
+
+이제 적용됐습니다.
+
+수정 내용:
+- 리뷰 리포트 `Target`이 절대경로가 아니라 입력한 상대경로로 출력됩니다.
+- `scenario-test-1000.md/json`의 임시 생성 디렉터리는 사용자별 절대경로 대신 `<temporary-generated-scenarios>`로 출력됩니다.
+- `submission.zip` 안의 샘플 로그도 `samples/payment-service`, `samples/payment-agent` 기준으로 정리했습니다.
+- README 실행 명령도 상대경로 기준입니다.
+
+확인된 출력 예:
+
+```text
+- Target: `samples/payment-service`
+```
+
+1,000회 검증 로그:
+
+```text
+- Generated directory: `<temporary-generated-scenarios>`
+- Passed: 1000
+- Failed: 0
+```
+
+푸시 완료:
+- 커밋: `9a2fdc1 Use relative paths in review outputs`
+- 원격 main: `9a2fdc1ee12b7037284847b4a5c6fd8d602b2c44`
+
+User:
+
+분석리포트는 마크다운 테이블로 보여줘
+
+Assistant:
+
+분석 리포트의 Finding 부분을 마크다운 테이블 중심으로 바꾸겠습니다. Scorecard는 이미 테이블이므로, Findings와 Auto Fix Plan을 테이블화하고 샘플 로그/제출 zip/원격 main까지 갱신하겠습니다.
+
+Assistant:
+
+현재 Findings가 섹션 반복형이라 발표 화면에서 길어집니다. 각 Finding을 한 줄 테이블로 만들고, 긴 설명은 테이블 안에서 짧게 escaping해 넣겠습니다. Auto Fix도 번호/파일/룰/수정/예시 테이블로 바꿉니다.
+
+Assistant:
+
+렌더러를 테이블형으로 바꿨습니다. 이제 샘플 리포트를 재생성해서 출력 형태를 확인하겠습니다.
+
+Assistant:
+
+샘플 로그가 새 포맷으로 생성됐습니다. 1,000회 검증도 재실행해서 렌더러 변경에 영향이 없는지 확인합니다.
+
+Assistant:
+
+1,000회 검증도 통과했습니다. 새 마크다운 테이블 출력 일부를 확인하고, README에 “테이블 리포트”를 짧게 반영하겠습니다.
+
+Assistant:
+
+테이블 포맷이 정상입니다. README에는 리포트가 마크다운 테이블임을 한 줄 추가하고, 제출 zip까지 갱신하겠습니다.

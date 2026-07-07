@@ -110,33 +110,52 @@ class ReviewReport:
         ]
         if not self.findings:
             lines.append("No findings matched the current rule set.")
-        for finding in self.findings:
+        else:
             lines.extend(
                 [
-                    f"### {finding.severity.upper()} · {finding.title}",
-                    "",
-                    f"- Rule: `{finding.rule_id}`",
-                    f"- Category: `{finding.category}`",
-                    f"- Location: `{finding.file}:{finding.line}`",
-                    f"- Evidence: `{finding.evidence}`",
-                    f"- Why it matters: {finding.rationale}",
-                    f"- Recommendation: {finding.recommendation}",
-                    "",
-                    "```text",
-                    finding.fix_example,
-                    "```",
-                    "",
+                    "| Severity | Rule | Category | Location | Evidence | Why It Matters | Recommendation |",
+                    "| --- | --- | --- | --- | --- | --- | --- |",
                 ]
             )
+            for finding in self.findings:
+                lines.append(
+                    "| "
+                    + " | ".join(
+                        [
+                            _md_cell(finding.severity.upper()),
+                            _md_cell(f"`{finding.rule_id}`"),
+                            _md_cell(finding.category),
+                            _md_cell(f"`{finding.file}:{finding.line}`"),
+                            _md_cell(f"`{finding.evidence}`"),
+                            _md_cell(finding.rationale),
+                            _md_cell(finding.recommendation),
+                        ]
+                    )
+                    + " |"
+                )
         if self.fix_plan:
-            lines.extend(["## Auto Fix Plan", ""])
+            lines.extend(
+                [
+                    "",
+                    "## Auto Fix Plan",
+                    "",
+                    "| # | File | Rule | Change | Suggested Code |",
+                    "| ---: | --- | --- | --- | --- |",
+                ]
+            )
             for idx, fix in enumerate(self.fix_plan, start=1):
-                lines.extend(
-                    [
-                        f"{idx}. `{fix['file']}` · {fix['rule_id']}",
-                        f"   - Change: {fix['change']}",
-                        f"   - Suggested code: `{fix['suggested_code']}`",
-                    ]
+                lines.append(
+                    "| "
+                    + " | ".join(
+                        [
+                            str(idx),
+                            _md_cell(f"`{fix['file']}`"),
+                            _md_cell(f"`{fix['rule_id']}`"),
+                            _md_cell(fix["change"]),
+                            _md_cell(f"`{fix['suggested_code']}`"),
+                        ]
+                    )
+                    + " |"
                 )
         return "\n".join(lines)
 
@@ -503,6 +522,10 @@ def _display_path(path: Path) -> str:
     except ValueError:
         return path.name
     return relative.as_posix() or "."
+
+
+def _md_cell(value: str) -> str:
+    return value.replace("\n", " ").replace("|", "\\|")
 
 
 def _penalty(finding: Finding) -> int:

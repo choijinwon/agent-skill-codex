@@ -16,153 +16,26 @@
 
 ## Findings
 
-### HIGH · Payment agent prompt may over-authorize tool use
-
-- Rule: `AGENT-002`
-- Category: `payagent`
-- Location: `unsafe_payment_agent.py:3`
-- Evidence: `You may call any tool whenever the user asks about payment.`
-- Why it matters: Payment agents must not be prompted to call sensitive tools broadly or bypass confirmation.
-- Recommendation: Restrict tool use by intent and action risk, and require confirmation for approve/cancel/refund/recurring-payment changes.
-
-```text
-Allowed tools: status_lookup without confirmation; approve/cancel/refund only after explicit confirmation.
-```
-
-### HIGH · Payment agent prompt may over-authorize tool use
-
-- Rule: `AGENT-002`
-- Category: `payagent`
-- Location: `unsafe_payment_agent.py:4`
-- Evidence: `Do not ask the user to confirm before cancel or refund.`
-- Why it matters: Payment agents must not be prompted to call sensitive tools broadly or bypass confirmation.
-- Recommendation: Restrict tool use by intent and action risk, and require confirmation for approve/cancel/refund/recurring-payment changes.
-
-```text
-Allowed tools: status_lookup without confirmation; approve/cancel/refund only after explicit confirmation.
-```
-
-### HIGH · Payment agent tool call lacks explicit confirmation gate
-
-- Rule: `AGENT-001`
-- Category: `agent`
-- Location: `unsafe_payment_agent.py:8`
-- Evidence: `def cancel_payment_tool(payment_id, user_message):`
-- Why it matters: AI agents that can invoke payment, cancel, refund, or subscription tools need explicit user confirmation before irreversible or sensitive actions.
-- Recommendation: Add a confirmation state before the tool call and require amount, merchant/product, target payment id, and user intent to match.
-
-```text
-if not confirmation.accepted: return ask_confirmation(payment_summary)
-```
-
-### HIGH · Payment operation without idempotency signal
-
-- Rule: `PAY-001`
-- Category: `payment`
-- Location: `unsafe_payment_agent.py:12`
-- Evidence: `def refund_payment(payment_id, amount):`
-- Why it matters: Financial operations must be safe under client retry, network retry, and duplicate webhook delivery.
-- Recommendation: Require an idempotency key and persist a unique request ledger.
-
-```text
-def approve_payment(request, idempotency_key: str): ledger.ensure_once(idempotency_key)
-```
-
-### MEDIUM · No automated tests detected
-
-- Rule: `TEST-001`
-- Category: `test`
-- Location: `.:1`
-- Evidence: `source files exist but no test files were found`
-- Why it matters: Payment changes need executable evidence for rollback-safe releases.
-- Recommendation: Add focused unit tests and at least one integration test around payment success, failure, duplicate request, and timeout cases.
-
-```text
-tests/test_payment_service.py with duplicate payment and timeout scenarios
-```
-
-### MEDIUM · Payment agent action lacks audit evidence
-
-- Rule: `AGENT-003`
-- Category: `payagent`
-- Location: `unsafe_payment_agent.py:8`
-- Evidence: `def cancel_payment_tool(payment_id, user_message):`
-- Why it matters: A payment agent action must leave auditable evidence for dispute handling, incident review, and privacy/security governance.
-- Recommendation: Write an audit event with action, payment id, masked user id, tool name, confirmation id, and result.
-
-```text
-audit.record(action='refund', payment_id=tid, confirmation_id=cid, result='requested')
-```
-
-### MEDIUM · Payment agent action lacks audit evidence
-
-- Rule: `AGENT-003`
-- Category: `payagent`
-- Location: `unsafe_payment_agent.py:9`
-- Evidence: `return {"tool": "cancel_payment", "paymentId": payment_id, "reason": user_message}`
-- Why it matters: A payment agent action must leave auditable evidence for dispute handling, incident review, and privacy/security governance.
-- Recommendation: Write an audit event with action, payment id, masked user id, tool name, confirmation id, and result.
-
-```text
-audit.record(action='refund', payment_id=tid, confirmation_id=cid, result='requested')
-```
-
-### MEDIUM · Payment agent action lacks audit evidence
-
-- Rule: `AGENT-003`
-- Category: `payagent`
-- Location: `unsafe_payment_agent.py:12`
-- Evidence: `def refund_payment(payment_id, amount):`
-- Why it matters: A payment agent action must leave auditable evidence for dispute handling, incident review, and privacy/security governance.
-- Recommendation: Write an audit event with action, payment id, masked user id, tool name, confirmation id, and result.
-
-```text
-audit.record(action='refund', payment_id=tid, confirmation_id=cid, result='requested')
-```
-
-### MEDIUM · Payment agent action lacks audit evidence
-
-- Rule: `AGENT-003`
-- Category: `payagent`
-- Location: `unsafe_payment_agent.py:13`
-- Evidence: `return {"status": "refund_requested", "paymentId": payment_id, "amount": amount}`
-- Why it matters: A payment agent action must leave auditable evidence for dispute handling, incident review, and privacy/security governance.
-- Recommendation: Write an audit event with action, payment id, masked user id, tool name, confirmation id, and result.
-
-```text
-audit.record(action='refund', payment_id=tid, confirmation_id=cid, result='requested')
-```
-
-### LOW · README is missing
-
-- Rule: `DOC-001`
-- Category: `readme`
-- Location: `.:1`
-- Evidence: `1 files scanned`
-- Why it matters: Financial services need operational context, ownership, and runbook links during incidents.
-- Recommendation: Add README sections for owner, APIs, dependencies, SLO, rollback, and FDS/security notes.
-
-```text
-README.md: owner, endpoints, alert channels, rollback command, known risk controls
-```
+| Severity | Rule | Category | Location | Evidence | Why It Matters | Recommendation |
+| --- | --- | --- | --- | --- | --- | --- |
+| HIGH | `AGENT-002` | payagent | `unsafe_payment_agent.py:3` | `You may call any tool whenever the user asks about payment.` | Payment agents must not be prompted to call sensitive tools broadly or bypass confirmation. | Restrict tool use by intent and action risk, and require confirmation for approve/cancel/refund/recurring-payment changes. |
+| HIGH | `AGENT-002` | payagent | `unsafe_payment_agent.py:4` | `Do not ask the user to confirm before cancel or refund.` | Payment agents must not be prompted to call sensitive tools broadly or bypass confirmation. | Restrict tool use by intent and action risk, and require confirmation for approve/cancel/refund/recurring-payment changes. |
+| HIGH | `AGENT-001` | agent | `unsafe_payment_agent.py:8` | `def cancel_payment_tool(payment_id, user_message):` | AI agents that can invoke payment, cancel, refund, or subscription tools need explicit user confirmation before irreversible or sensitive actions. | Add a confirmation state before the tool call and require amount, merchant/product, target payment id, and user intent to match. |
+| HIGH | `PAY-001` | payment | `unsafe_payment_agent.py:12` | `def refund_payment(payment_id, amount):` | Financial operations must be safe under client retry, network retry, and duplicate webhook delivery. | Require an idempotency key and persist a unique request ledger. |
+| MEDIUM | `TEST-001` | test | `.:1` | `source files exist but no test files were found` | Payment changes need executable evidence for rollback-safe releases. | Add focused unit tests and at least one integration test around payment success, failure, duplicate request, and timeout cases. |
+| MEDIUM | `AGENT-003` | payagent | `unsafe_payment_agent.py:8` | `def cancel_payment_tool(payment_id, user_message):` | A payment agent action must leave auditable evidence for dispute handling, incident review, and privacy/security governance. | Write an audit event with action, payment id, masked user id, tool name, confirmation id, and result. |
+| MEDIUM | `AGENT-003` | payagent | `unsafe_payment_agent.py:9` | `return {"tool": "cancel_payment", "paymentId": payment_id, "reason": user_message}` | A payment agent action must leave auditable evidence for dispute handling, incident review, and privacy/security governance. | Write an audit event with action, payment id, masked user id, tool name, confirmation id, and result. |
+| MEDIUM | `AGENT-003` | payagent | `unsafe_payment_agent.py:12` | `def refund_payment(payment_id, amount):` | A payment agent action must leave auditable evidence for dispute handling, incident review, and privacy/security governance. | Write an audit event with action, payment id, masked user id, tool name, confirmation id, and result. |
+| MEDIUM | `AGENT-003` | payagent | `unsafe_payment_agent.py:13` | `return {"status": "refund_requested", "paymentId": payment_id, "amount": amount}` | A payment agent action must leave auditable evidence for dispute handling, incident review, and privacy/security governance. | Write an audit event with action, payment id, masked user id, tool name, confirmation id, and result. |
+| LOW | `DOC-001` | readme | `.:1` | `1 files scanned` | Financial services need operational context, ownership, and runbook links during incidents. | Add README sections for owner, APIs, dependencies, SLO, rollback, and FDS/security notes. |
 
 ## Auto Fix Plan
 
-1. `unsafe_payment_agent.py` · AGENT-002
-   - Change: Restrict tool use by intent and action risk, and require confirmation for approve/cancel/refund/recurring-payment changes.
-   - Suggested code: `Allowed tools: status_lookup without confirmation; approve/cancel/refund only after explicit confirmation.`
-2. `unsafe_payment_agent.py` · AGENT-001
-   - Change: Add a confirmation state before the tool call and require amount, merchant/product, target payment id, and user intent to match.
-   - Suggested code: `if not confirmation.accepted: return ask_confirmation(payment_summary)`
-3. `unsafe_payment_agent.py` · PAY-001
-   - Change: Require an idempotency key and persist a unique request ledger.
-   - Suggested code: `def approve_payment(request, idempotency_key: str): ledger.ensure_once(idempotency_key)`
-4. `.` · TEST-001
-   - Change: Add focused unit tests and at least one integration test around payment success, failure, duplicate request, and timeout cases.
-   - Suggested code: `tests/test_payment_service.py with duplicate payment and timeout scenarios`
-5. `unsafe_payment_agent.py` · AGENT-003
-   - Change: Write an audit event with action, payment id, masked user id, tool name, confirmation id, and result.
-   - Suggested code: `audit.record(action='refund', payment_id=tid, confirmation_id=cid, result='requested')`
-6. `.` · DOC-001
-   - Change: Add README sections for owner, APIs, dependencies, SLO, rollback, and FDS/security notes.
-   - Suggested code: `README.md: owner, endpoints, alert channels, rollback command, known risk controls`
+| # | File | Rule | Change | Suggested Code |
+| ---: | --- | --- | --- | --- |
+| 1 | `unsafe_payment_agent.py` | `AGENT-002` | Restrict tool use by intent and action risk, and require confirmation for approve/cancel/refund/recurring-payment changes. | `Allowed tools: status_lookup without confirmation; approve/cancel/refund only after explicit confirmation.` |
+| 2 | `unsafe_payment_agent.py` | `AGENT-001` | Add a confirmation state before the tool call and require amount, merchant/product, target payment id, and user intent to match. | `if not confirmation.accepted: return ask_confirmation(payment_summary)` |
+| 3 | `unsafe_payment_agent.py` | `PAY-001` | Require an idempotency key and persist a unique request ledger. | `def approve_payment(request, idempotency_key: str): ledger.ensure_once(idempotency_key)` |
+| 4 | `.` | `TEST-001` | Add focused unit tests and at least one integration test around payment success, failure, duplicate request, and timeout cases. | `tests/test_payment_service.py with duplicate payment and timeout scenarios` |
+| 5 | `unsafe_payment_agent.py` | `AGENT-003` | Write an audit event with action, payment id, masked user id, tool name, confirmation id, and result. | `audit.record(action='refund', payment_id=tid, confirmation_id=cid, result='requested')` |
+| 6 | `.` | `DOC-001` | Add README sections for owner, APIs, dependencies, SLO, rollback, and FDS/security notes. | `README.md: owner, endpoints, alert channels, rollback command, known risk controls` |

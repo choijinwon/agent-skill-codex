@@ -1,5 +1,5 @@
 {
-  "target": "/Users/choijinwon/Documents/Codex/2026-07-07-role-openai-codex-plugin-architect-google/plugins/securepay-ai-reviewer/samples/payment-service",
+  "target": "samples/payment-service",
   "profile": "security",
   "scores": {
     "risk_score": 0,

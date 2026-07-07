@@ -143,6 +143,7 @@ class ReviewReport:
 
 class ReviewEngine:
     def __init__(self, root: Path, options: ReviewOptions | None = None) -> None:
+        self.target_label = _display_path(root)
         self.root = root.resolve()
         self.options = options or ReviewOptions()
         self.rules = _build_rules()
@@ -164,7 +165,7 @@ class ReviewEngine:
         findings.sort(key=lambda item: (_severity_rank(item.severity), item.file, item.line))
         scores = self._score(findings)
         fix_plan = self._fix_plan(findings) if self.options.include_fix_plan else []
-        return ReviewReport(str(self.root), profile, scores, findings, fix_plan)
+        return ReviewReport(self.target_label, profile, scores, findings, fix_plan)
 
     def _selected_rules(self) -> list[Rule]:
         categories = set(self.options.categories)
@@ -492,6 +493,16 @@ def _read_text(path: Path) -> str | None:
         return path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
         return None
+
+
+def _display_path(path: Path) -> str:
+    if not path.is_absolute():
+        return path.as_posix()
+    try:
+        relative = path.resolve().relative_to(Path.cwd().resolve())
+    except ValueError:
+        return path.name
+    return relative.as_posix() or "."
 
 
 def _penalty(finding: Finding) -> int:

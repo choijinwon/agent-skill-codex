@@ -216,10 +216,11 @@ def write_reports(results: list[ScenarioResult], output_dir: Path, seed: int, ge
         stats["total"] += 1
         stats["passed"] += int(result.passed)
 
+    generated_dir_label = _display_generated_dir(generated_dir)
     payload = {
         "scenario_count": len(results),
         "seed": seed,
-        "generated_dir": str(generated_dir),
+        "generated_dir": generated_dir_label,
         "passed": len(results) - len(failures),
         "failed": len(failures),
         "by_template": by_template,
@@ -235,7 +236,7 @@ def write_reports(results: list[ScenarioResult], output_dir: Path, seed: int, ge
         "",
         f"- Scenario count: {len(results)}",
         f"- Seed: {seed}",
-        f"- Generated directory: `{generated_dir}`",
+        f"- Generated directory: `{generated_dir_label}`",
         f"- Passed: {len(results) - len(failures)}",
         f"- Failed: {len(failures)}",
         "",
@@ -256,6 +257,13 @@ def write_reports(results: list[ScenarioResult], output_dir: Path, seed: int, ge
     else:
         lines.extend(["", "All generated scenarios passed expected-rule assertions."])
     (output_dir / "scenario-test-1000.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _display_generated_dir(path: Path) -> str:
+    try:
+        return path.resolve().relative_to(Path.cwd().resolve()).as_posix()
+    except ValueError:
+        return "<temporary-generated-scenarios>"
 
 
 def parse_args() -> argparse.Namespace:

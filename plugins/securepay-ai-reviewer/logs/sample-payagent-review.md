@@ -1,6 +1,6 @@
 # SecurePay AI Reviewer Report
 
-- Target: `/Users/choijinwon/Documents/Codex/2026-07-07-role-openai-codex-plugin-architect-google/plugins/securepay-ai-reviewer/samples/payment-agent`
+- Target: `samples/payment-agent`
 - Profile: `payagent`
 - Findings: 10 total, 0 critical, 4 high
 

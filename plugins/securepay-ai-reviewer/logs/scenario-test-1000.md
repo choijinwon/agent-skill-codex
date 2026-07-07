@@ -2,7 +2,7 @@
 
 - Scenario count: 1000
 - Seed: 20260707
-- Generated directory: `/var/folders/8j/6bf4y4p51ynb690kgd9cjl440000gn/T/securepay-scenarios-92srnkoe`
+- Generated directory: `<temporary-generated-scenarios>`
 - Passed: 1000
 - Failed: 0
 

@@ -1,7 +1,7 @@
 {
   "scenario_count": 1000,
   "seed": 20260707,
-  "generated_dir": "/var/folders/8j/6bf4y4p51ynb690kgd9cjl440000gn/T/securepay-scenarios-92srnkoe",
+  "generated_dir": "<temporary-generated-scenarios>",
   "passed": 1000,
   "failed": 0,
   "by_template": {

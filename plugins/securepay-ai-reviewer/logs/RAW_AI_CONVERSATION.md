@@ -1632,3 +1632,144 @@ Assistant:
 Assistant:
 
 테이블 포맷이 정상입니다. README에는 리포트가 마크다운 테이블임을 한 줄 추가하고, 제출 zip까지 갱신하겠습니다.
+
+Assistant:
+
+적용했습니다. 이제 분석 리포트는 마크다운 테이블 중심으로 출력됩니다.
+
+바뀐 출력 구조:
+- `Scorecard`: 기존처럼 테이블
+- `Findings`: 테이블
+- `Auto Fix Plan`: 테이블
+
+검증:
+- plugin validator 통과
+- 1,000회 시나리오 테스트 재실행: `1000 passed, 0 failed`
+- `submission.zip` 내부 샘플 리포트도 테이블 포맷 확인 완료
+
+푸시 완료:
+- 커밋: `12b2a10 Render review reports as markdown tables`
+- 원격 main: `12b2a105ed9f2225a996d8589fd2888ec1b30621`
+
+User:
+
+로컬에서 폴더 만들어서 실행해줘 >
+(base) choijinwon@choejin-won-ui-MacBookPro agent-kakao %
+
+Assistant:
+
+좋아요. 사용자별 경로 문제 없이 보이도록 `~/Documents/Codex/agent-kakao` 아래에 데모 폴더를 만들고, 그 안에서 `submission.zip`을 풀어 `src` 기준으로 실행해보겠습니다. 딱 심사위원 앞에서 보여줄 모양으로요.
+
+Assistant:
+
+`agent-kakao` 폴더는 아직 없고, 최신 `submission.zip`은 준비돼 있습니다. 이제 새 폴더를 만들고 zip을 복사해서 풀겠습니다.
+
+Assistant:
+
+폴더를 만들었습니다. 이제 제출 zip을 그 안에 복사하고, `submission/src`에서 바로 실행할 수 있게 풀겠습니다.
+
+Assistant:
+
+복사 완료. 이제 압축을 풉니다.
+
+Assistant:
+
+압축이 풀렸습니다. 이제 사용자가 터미널에서 그대로 따라 칠 수 있는 상대경로 위치인 `agent-kakao/submission/src`에서 핵심 2줄과 1,000회 검증을 실행합니다.
+
+Assistant:
+
+로컬 폴더 만들어서 실행 완료했습니다.
+
+만든 위치:
+```bash
+~/Documents/Codex/agent-kakao
+```
+
+구조:
+```bash
+agent-kakao/
+├── submission.zip
+└── submission/
+    ├── README.md
+    ├── logs/
+    └── src/
+```
+
+실행 위치:
+```bash
+cd ~/Documents/Codex/agent-kakao/submission/src
+```
+
+실행한 명령:
+```bash
+python3 scripts/securepay_review.py samples/payment-service --category payment
+python3 scripts/securepay_review.py samples/payment-agent --category payagent
+python3 scripts/run_scenario_tests.py --count 1000 --output-dir ../logs
+```
+
+결과:
+```text
+Ran 1000 scenarios: 1000 passed, 0 failed
+```
+
+리포트도 확인했습니다.
+- 상대경로 출력 정상: `samples/payment-service`, `samples/payment-agent`
+- Findings 마크다운 테이블 출력 정상
+- Auto Fix Plan 마크다운 테이블 출력 정상
+
+사용자 터미널 기준으로는 이렇게 실행하면 됩니다:
+
+```bash
+cd ~/Documents/Codex/agent-kakao/submission/src
+
+python3 scripts/securepay_review.py samples/payment-service --category payment
+python3 scripts/securepay_review.py samples/payment-agent --category payagent
+```
+
+User:
+
+사용자가 쉽도록 작동하도록 키넣어줘
+
+Assistant:
+
+좋아요. “사용자가 생각 안 하고 바로 실행” 쪽으로 손잡이를 달겠습니다. `run_demo.sh` 하나로 핵심 2개 리뷰가 돌고, `run_1000_tests.sh`로 검증까지 돌게 만들게요. 실행 위치가 repo root든 plugin root든 submission root든 최대한 알아서 찾도록 하겠습니다.
+
+Assistant:
+
+현재 원격 clone은 clean이고, 로컬 데모 폴더도 있습니다. 이제 실행 키 역할을 하는 스크립트를 repo root와 plugin/submission root 양쪽에서 쓸 수 있게 넣겠습니다.
+
+Assistant:
+
+실행 스크립트를 추가했습니다. 이제 실행 권한을 주고 README/zip에도 “한 줄 실행”으로 반영하겠습니다.
+
+Assistant:
+
+실행 권한까지 줬습니다. README에 “그냥 이거 치면 된다” 경로를 추가합니다.
+
+Assistant:
+
+스크립트 자체는 동작합니다. 이제 `submission.zip`을 풀었을 때도 루트에서 바로 `./run_demo.sh`가 되도록 zip 루트에 같은 “키”를 넣고, 로컬 `agent-kakao` 폴더도 최신으로 갈아끼우겠습니다.
+
+Assistant:
+
+README는 괜찮지만 zip 루트에 실제 `run_demo.sh`가 들어가야 말이 맞습니다. 지금 그 부분을 패키징에 반영합니다.
+
+Assistant:
+
+새 제출 스테이징을 만들었습니다. 코드/문서/로그와 실행 키를 넣겠습니다.
+
+Assistant:
+
+핵심 파일 복사 완료. 이제 zip 루트에 실행 키를 복사합니다.
+
+Assistant:
+
+문서와 로그도 들어갔습니다. 이제 submission root용 실행 스크립트를 `run_demo.sh`, `run_1000_tests.sh`로 넣습니다.
+
+Assistant:
+
+제출 zip 루트 실행 키가 들어갔습니다. 실제로 그 루트에서 실행되는지 확인합니다.
+
+Assistant:
+
+제출 루트에서 `./run_demo.sh`, `./run_1000_tests.sh` 둘 다 정상 작동했습니다. 이제 이 상태로 zip을 다시 만들고, 로컬 `agent-kakao` 폴더도 최신 키 포함 버전으로 교체하겠습니다.

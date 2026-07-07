@@ -14,6 +14,26 @@ The MVP is intentionally simple and auditable. It can run locally in 30 seconds 
 
 From `submission.zip`, unzip and run:
 
+Repo root:
+
+```bash
+./run_demo.sh
+```
+
+Plugin root:
+
+```bash
+./run_demo.sh
+```
+
+Unzipped submission root:
+
+```bash
+./run_demo.sh
+```
+
+Manual commands:
+
 ```bash
 cd src
 python3 scripts/securepay_review.py samples/payment-service --category payment
@@ -37,6 +57,12 @@ The repository includes a deterministic scenario harness that generates and scan
 
 ```bash
 python3 scripts/run_scenario_tests.py --count 1000 --output-dir logs
+```
+
+Shortcut:
+
+```bash
+./run_1000_tests.sh
 ```
 
 Validated scenario groups:

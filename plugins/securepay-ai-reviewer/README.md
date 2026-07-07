@@ -239,10 +239,10 @@ submission.zip
     ├── sample-payment-review.md
     ├── sample-security-review.json
     ├── sample-payagent-review.md
-    └── RAW_AI_CONVERSATION_REQUIRED.md
+    └── RAW_AI_CONVERSATION.md
 ```
 
-Important: the raw AI conversation log must be exported from the chat environment and placed under `logs/` without editing, deletion, excerpting, or summarization. This repository does not fabricate that log.
+The AI conversation log is stored under `logs/RAW_AI_CONVERSATION.md`.
 
 ## MVP scope
 
